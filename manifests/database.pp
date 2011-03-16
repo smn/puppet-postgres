@@ -13,7 +13,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-define postgres::database($ensure, $owner = false, $encoding => 'UNICODE') {
+define postgres::database($ensure, $owner = false, $encoding = 'UNICODE') {
     $ownerstring = $owner ? {
         false => "",
         default => "-O $owner"
