@@ -1,4 +1,5 @@
 # Copyright (c) 2008, Luke Kanies, luke@madstop.com
+# Copyright (c) 2010, Praekelt Foundation
 # 
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -12,16 +13,16 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-define postgres::database($ensure, $owner = false) {
+define postgres::database($ensure, $owner = false, $encoding => 'UNICODE') {
     $ownerstring = $owner ? {
         false => "",
         default => "-O $owner"
     }
-
+    
     case $ensure {
         present: {
             exec { "Create $name postgres db":
-                command => "/usr/bin/createdb $ownerstring $name",
+                command => "/usr/bin/createdb $ownerstring -E $encoding $name",
                 user => "postgres",
                 unless => "/usr/bin/psql -l | grep '$name  *|'"
             }
