@@ -13,16 +13,20 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-define postgres::database($ensure, $owner = false, $encoding = 'UNICODE') {
+define postgres::database($ensure, $owner = false, $encoding = 'UTF8', $template = false) {
     $ownerstring = $owner ? {
         false => "",
         default => "-O $owner"
+    }
+    $templatestring = $template ? {
+        false => "",
+        default => "-T $template"
     }
     
     case $ensure {
         present: {
             exec { "Create $name postgres db":
-                command => "/usr/bin/createdb $ownerstring -E $encoding $name",
+                command => "/usr/bin/createdb $ownerstring -E $encoding $templatestring $name",
                 user => "postgres",
                 unless => "/usr/bin/psql -l | grep '$name  *|'"
             }
